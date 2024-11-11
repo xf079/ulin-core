@@ -35,13 +35,13 @@ const Item: FC<IItemProps> = ({ icon, title, tooltip, active, onClick }) => {
   const btnElement = (
     <div
       className={cn(
-        'w-10 h-10 flex flex-col justify-center items-center gap-0.5 rounded cursor-pointer text-sidebar-accent-foreground/70 hover:bg-sidebar-accent',
+        'w-12 h-12 flex flex-col justify-center items-center gap-0.5 rounded cursor-pointer text-sidebar-accent-foreground/70 hover:bg-sidebar-accent',
         active && 'bg-sidebar-accent text-sidebar-accent-foreground'
       )}
       onClick={onClick}
     >
       <TitleIcon className={cn('w-5 h-5 transition-all')} />
-      <span className={cn('text-[8px] font-semibold transition-all')}>{title}</span>
+      <span className={cn('text-[10px] font-semibold transition-all')}>{title}</span>
     </div>
   );
 

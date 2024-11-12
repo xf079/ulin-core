@@ -14,6 +14,9 @@ import {
 
 import { SearchIcon, HouseIcon, BotIcon, LucideProps } from 'lucide-react';
 import { cn } from '@/lib/utils.ts';
+import { useTheme } from '@/theme-provider.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { HamburgerMenuIcon,HomeIcon,ValueNoneIcon } from '@radix-ui/react-icons';
 
 interface IItemType {
   key: string;
@@ -35,13 +38,15 @@ const Item: FC<IItemProps> = ({ icon, title, tooltip, active, onClick }) => {
   const btnElement = (
     <div
       className={cn(
-        'w-12 h-12 flex flex-col justify-center items-center gap-0.5 rounded cursor-pointer text-sidebar-accent-foreground/70 hover:bg-sidebar-accent',
-        active && 'bg-sidebar-accent text-sidebar-accent-foreground'
+        'w-10 h-10 flex flex-col justify-center items-center gap-0.5 rounded cursor-pointer',
+        active && 'bg-accent text-accent-foreground'
       )}
       onClick={onClick}
     >
       <TitleIcon className={cn('w-5 h-5 transition-all')} />
-      <span className={cn('text-[10px] font-semibold transition-all')}>{title}</span>
+      {/*<span className={cn('text-[10px] font-semibold transition-all')}>*/}
+      {/*  {title}*/}
+      {/*</span>*/}
     </div>
   );
 
@@ -64,7 +69,7 @@ const menuList: Array<IItemType> = [
     tooltip: (
       <div>
         <p>搜索并快速跳转</p>
-        <p className='text-[10px] text-muted-foreground'>⌘+K</p>
+        <p className='text-[10px] text-primary-foreground/60'>⌘+K</p>
       </div>
     )
   },
@@ -82,12 +87,12 @@ const menuList: Array<IItemType> = [
   },
   {
     key: 'home',
-    icon: HouseIcon,
+    icon: HomeIcon,
     title: '首页',
     tooltip: (
       <div>
         <p>查看最近访问的页面及更多内容</p>
-        <p className='text-[10px] text-muted-foreground'>⌘+H</p>
+        <p className='text-[10px] text-primary-foreground/60'>⌘+H</p>
       </div>
     )
   }
@@ -96,14 +101,16 @@ const menuList: Array<IItemType> = [
 export const SiderBar = () => {
   const [activeKey, setActiveKey] = useState('search');
 
+  const { setTheme } = useTheme();
+
   const onHandlerItem = (item: IItemType) => {
     setActiveKey(item.key);
   };
 
   return (
-    <div className='w-14 h-dvh bg-sidebar flex flex-col items-center justify-between'>
+    <div className='w-12 h-dvh bg-foreground/5 text-sidebar-foreground flex flex-col items-center justify-between drag'>
       <TooltipProvider delayDuration={120}>
-        <div className='flex flex-col gap-2 py-2'>
+        <div className='w-full flex flex-col justify-center items-center gap-2 py-7 no-drag'>
           {menuList.map((item) => (
             <Item
               icon={item.icon}
@@ -116,7 +123,25 @@ export const SiderBar = () => {
           ))}
         </div>
       </TooltipProvider>
-      <div className=''>123</div>
+      <div className='no-drag w-full flex flex-col justify-center items-center gap-2 '>
+        <Button size='icon' variant='ghost' className='w-8 h-8'>
+          <HamburgerMenuIcon className='w-6 h-6' />
+        </Button>
+        <span
+          onClick={() => {
+            setTheme('light');
+          }}
+        >
+          light
+        </span>
+        <span
+          onClick={() => {
+            setTheme('dark');
+          }}
+        >
+          dark
+        </span>
+      </div>
     </div>
   );
 };

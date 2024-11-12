@@ -22,6 +22,7 @@ export const AiChat = () => {
         <div className='relative w-full max-w-[720px] mx-auto'>
           <div className='w-full h-full'>
             <h1>Hi, ChatGPT</h1>
+            <div contentEditable={true} aria-placeholder='请输入' className='[]'></div>
           </div>
           <div className='flex flex-col gap-2'>
             <div className='flex justify-between items-center'>

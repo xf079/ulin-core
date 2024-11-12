@@ -59,7 +59,7 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --sidebar-background: 220,3%,19%;
+    --sidebar-background: 220, 3%, 19%;
     --sidebar-foreground: 240 4.8% 95.9%;
   }
 }
@@ -82,4 +82,16 @@
   .no-drag {
     -webkit-app-region: no-drag;
   }
+}
+div{
+  -webkit-text-fill-color:#ccc
+}
+[contenteditable]:empty:after {
+  content: attr(aria-placeholder);
+}
+[contenteditable]{
+  scrollbar-highlight-color: transparent;
+}
+*,:focus{
+  outline: none;
 }

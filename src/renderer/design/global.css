@@ -83,13 +83,11 @@
     -webkit-app-region: no-drag;
   }
 }
-div{
-  -webkit-text-fill-color:#ccc
-}
-[contenteditable]:empty:after {
-  content: attr(aria-placeholder);
+[contenteditable][data-focus]:empty:after {
+  content: attr(data-placeholder);
 }
 [contenteditable]{
+  -webkit-text-fill-color:#ccc;
   scrollbar-highlight-color: transparent;
 }
 *,:focus{

@@ -1,146 +1,117 @@
+import { useState } from 'react';
+import { useEvent } from '@/hooks/useEvent.ts';
+import { Avatar, Button, theme, Tooltip } from 'antd';
 import {
-  FC,
-  ForwardRefExoticComponent,
-  ReactNode,
-  RefAttributes,
-  useState
-} from 'react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip.tsx';
-
-import { SearchIcon, HouseIcon, BotIcon, LucideProps } from 'lucide-react';
-import { cn } from '@/lib/utils.ts';
-import { useTheme } from '@/theme-provider.tsx';
-import { Button } from '@/components/ui/button.tsx';
-import { HamburgerMenuIcon,HomeIcon,ValueNoneIcon } from '@radix-ui/react-icons';
-
-interface IItemType {
-  key: string;
-  icon: ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
-  >;
-  active?: boolean;
-  title: string;
-  tooltip?: ReactNode;
-}
-
-interface IItemProps extends Optional<IItemType, 'key'> {
-  onClick?: () => void;
-}
-
-const Item: FC<IItemProps> = ({ icon, title, tooltip, active, onClick }) => {
-  const TitleIcon = icon;
-
-  const btnElement = (
-    <div
-      className={cn(
-        'w-10 h-10 flex flex-col justify-center items-center gap-0.5 rounded cursor-pointer',
-        active && 'bg-accent text-accent-foreground'
-      )}
-      onClick={onClick}
-    >
-      <TitleIcon className={cn('w-5 h-5 transition-all')} />
-      {/*<span className={cn('text-[10px] font-semibold transition-all')}>*/}
-      {/*  {title}*/}
-      {/*</span>*/}
-    </div>
-  );
-
-  if (!tooltip) return btnElement;
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{btnElement}</TooltipTrigger>
-      <TooltipContent side='right' align='start'>
-        {tooltip}
-      </TooltipContent>
-    </Tooltip>
-  );
-};
-
-const menuList: Array<IItemType> = [
-  {
-    key: 'search',
-    icon: SearchIcon,
-    title: '搜索',
-    tooltip: (
-      <div>
-        <p>搜索并快速跳转</p>
-        <p className='text-[10px] text-primary-foreground/60'>⌘+K</p>
-      </div>
-    )
-  },
-  {
-    key: 'ai',
-    icon: BotIcon,
-    title: 'AI',
-    tooltip: (
-      <p>
-        你用 AI 知识库和您工作空间中的资源，
-        <br />
-        轻松获取所需答案
-      </p>
-    )
-  },
-  {
-    key: 'home',
-    icon: HomeIcon,
-    title: '首页',
-    tooltip: (
-      <div>
-        <p>查看最近访问的页面及更多内容</p>
-        <p className='text-[10px] text-primary-foreground/60'>⌘+H</p>
-      </div>
-    )
-  }
-];
+  AppstoreAddOutlined,
+  DeleteOutlined,
+  HomeOutlined,
+  MessageOutlined,
+  QuestionCircleOutlined,
+  SearchOutlined,
+  SettingOutlined,
+  UserOutlined
+} from '@ant-design/icons';
 
 export const SiderBar = () => {
-  const [activeKey, setActiveKey] = useState('search');
+  const [activeKey, setActiveKey] = useState('ai');
+  const { token } = theme.useToken();
 
-  const { setTheme } = useTheme();
+  const emitter = useEvent();
 
-  const onHandlerItem = (item: IItemType) => {
-    setActiveKey(item.key);
+  const handleSearch = () => {
+    emitter.emit('search');
   };
 
   return (
-    <div className='w-12 h-dvh bg-foreground/5 text-sidebar-foreground flex flex-col items-center justify-between drag'>
-      <TooltipProvider delayDuration={120}>
-        <div className='w-full flex flex-col justify-center items-center gap-2 py-7 no-drag'>
-          {menuList.map((item) => (
-            <Item
-              icon={item.icon}
-              title={item.title}
-              tooltip={item.tooltip}
-              key={item.key}
-              active={item.key === activeKey}
-              onClick={() => onHandlerItem(item)}
-            />
-          ))}
-        </div>
-      </TooltipProvider>
-      <div className='no-drag w-full flex flex-col justify-center items-center gap-2 '>
-        <Button size='icon' variant='ghost' className='w-8 h-8'>
-          <HamburgerMenuIcon className='w-6 h-6' />
-        </Button>
-        <span
-          onClick={() => {
-            setTheme('light');
-          }}
+    <div
+      className='w-12 h-dvh flex flex-col items-center justify-between drag'
+      style={{ backgroundColor: token.colorBgLayout }}
+    >
+      <div className='w-full flex flex-col justify-center items-center gap-2 pt-2 pb-7 no-drag'>
+        <Avatar icon={<UserOutlined />} size={28} />
+        <Tooltip
+          placement='rightTop'
+          title={
+            <div className='text-xs'>
+              <p>搜索并快速跳转</p>
+              <p className='opacity-50'>⌘+K</p>
+            </div>
+          }
         >
-          light
-        </span>
-        <span
-          onClick={() => {
-            setTheme('dark');
-          }}
+          <Button
+            type='text'
+            icon={<SearchOutlined />}
+            onClick={handleSearch}
+          />
+        </Tooltip>
+        <Tooltip
+          placement='rightTop'
+          title={
+            <div className='text-xs'>
+              你用 AI 知识库和您工作空间中的资源，轻松获取所需答案
+            </div>
+          }
         >
-          dark
-        </span>
+          <Button
+            type='text'
+            color='default'
+            variant={activeKey === 'ai' ? 'filled' : 'text'}
+            icon={<MessageOutlined />}
+            onClick={() => setActiveKey('ai')}
+          />
+        </Tooltip>
+        <Tooltip
+          placement='rightTop'
+          title={
+            <div className='text-xs'>
+              <p>查看最近访问的页面及更多内容</p>
+              <p className='text-white/60'>⌘+H</p>
+            </div>
+          }
+        >
+          <Button
+            type='text'
+            color='default'
+            variant={activeKey === 'home' ? 'filled' : 'text'}
+            icon={<HomeOutlined />}
+            onClick={() => setActiveKey('home')}
+          />
+        </Tooltip>
+        <span className='i-solar-home-smile-bold text-xl' />
+      </div>
+      <div className='no-drag w-full flex flex-col justify-center items-center gap-2 pb-2'>
+        <Tooltip placement='rightTop' title='系统设置'>
+          <Button
+            type='text'
+            color='default'
+            variant='text'
+            icon={<SettingOutlined />}
+          />
+        </Tooltip>
+        <Tooltip placement='rightTop' title='模版中心'>
+          <Button
+            type='text'
+            color='default'
+            variant='text'
+            icon={<AppstoreAddOutlined />}
+          />
+        </Tooltip>
+        <Tooltip placement='rightTop' title='垃圾箱'>
+          <Button
+            type='text'
+            color='default'
+            variant='text'
+            icon={<DeleteOutlined />}
+          />
+        </Tooltip>
+        <Tooltip placement='rightTop' title='帮助中心'>
+          <Button
+            type='text'
+            color='default'
+            variant='text'
+            icon={<QuestionCircleOutlined />}
+          />
+        </Tooltip>
       </div>
     </div>
   );

@@ -8,11 +8,15 @@ import {
   CommandList
 } from '@/components/ui/command.tsx';
 import React, { Fragment, PropsWithChildren } from 'react';
+import { useEvent } from '@/hooks/useEvent.ts';
 
 const CommandContent = () => {
   return (
     <Fragment>
-      <CommandInput placeholder={`在XueFeng Li's 的ulin中搜索或提问吧...`} className='text-[16px]' />
+      <CommandInput
+        placeholder={`在XueFeng Li's 的ulin中搜索或提问吧...`}
+        className='text-[16px]'
+      />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading='Suggestions'>
@@ -27,6 +31,9 @@ const CommandContent = () => {
 
 const CommandDialogWrap = (props: PropsWithChildren) => {
   const [open, setOpen] = React.useState(false);
+
+  const emitter = useEvent();
+
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -35,6 +42,9 @@ const CommandDialogWrap = (props: PropsWithChildren) => {
       }
     };
     document.addEventListener('keydown', down);
+    emitter.on('search', () => {
+      setOpen((open) => !open);
+    });
     return () => document.removeEventListener('keydown', down);
   }, []);
   return (
